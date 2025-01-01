@@ -22,12 +22,14 @@ class CupertinoControls extends StatefulWidget {
     required this.backgroundColor,
     required this.iconColor,
     this.showPlayButton = true,
+    this.additionalWidget,
     super.key,
   });
 
   final Color backgroundColor;
   final Color iconColor;
   final bool showPlayButton;
+  final Widget? additionalWidget;
 
   @override
   State<StatefulWidget> createState() {
@@ -362,13 +364,18 @@ class _CupertinoControlsState extends State<CupertinoControls>
                 notifier.hideStuff = false;
               });
             },
-      child: CenterPlayButton(
-        backgroundColor: widget.backgroundColor,
-        iconColor: widget.iconColor,
-        isFinished: isFinished,
-        isPlaying: controller.value.isPlaying,
-        show: showPlayButton,
-        onPressed: _playPause,
+      child: Row(
+        children: [
+          if (widget.additionalWidget != null) widget.additionalWidget!,
+          CenterPlayButton(
+            backgroundColor: widget.backgroundColor,
+            iconColor: widget.iconColor,
+            isFinished: isFinished,
+            isPlaying: controller.value.isPlaying,
+            show: showPlayButton,
+            onPressed: _playPause,
+          ),
+        ],
       ),
     );
   }

@@ -28,10 +28,13 @@ class Chewie extends StatefulWidget {
   const Chewie({
     super.key,
     required this.controller,
+    this.additionalWidget
   });
 
   /// The [ChewieController]
   final ChewieController controller;
+
+  final Widget? additionalWidget;
 
   @override
   ChewieState createState() {
@@ -89,7 +92,9 @@ class ChewieState extends State<Chewie> {
       controller: widget.controller,
       child: ChangeNotifierProvider<PlayerNotifier>.value(
         value: notifier,
-        builder: (context, w) => const PlayerWithControls(),
+        builder: (context, w) => PlayerWithControls(
+          additionalWidget: widget.additionalWidget,
+        ),
       ),
     );
   }

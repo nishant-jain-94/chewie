@@ -18,10 +18,12 @@ import 'package:video_player/video_player.dart';
 class MaterialControls extends StatefulWidget {
   const MaterialControls({
     this.showPlayButton = true,
+    this.additionalWidget,
     super.key,
   });
 
   final bool showPlayButton;
+  final Widget? additionalWidget;
 
   @override
   State<StatefulWidget> createState() {
@@ -396,6 +398,7 @@ class _MaterialControlsState extends State<MaterialControls>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            if (widget.additionalWidget != null) widget.additionalWidget!,
             if (!isFinished && !chewieController.isLive)
               CenterSeekButton(
                 iconData: Icons.replay_10,

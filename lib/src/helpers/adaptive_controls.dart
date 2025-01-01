@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 class AdaptiveControls extends StatelessWidget {
   const AdaptiveControls({
     super.key,
+    this.additionalWidget,
   });
-
+  final Widget? additionalWidget;
+  
   @override
   Widget build(BuildContext context) {
     switch (Theme.of(context).platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
-        return const MaterialControls();
+        return MaterialControls(
+          additionalWidget: additionalWidget,
+        );
 
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
@@ -24,7 +28,9 @@ class AdaptiveControls extends StatelessWidget {
           iconColor: Color.fromARGB(255, 200, 200, 200),
         );
       default:
-        return const MaterialControls();
+        return MaterialControls(
+          additionalWidget: additionalWidget,
+        );
     }
   }
 }
