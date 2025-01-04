@@ -1,20 +1,20 @@
-import 'package:chewie/chewie.dart';
+import 'package:chewiebingeplayer/chewiebingeplayer.dart';
 import 'package:flutter/material.dart';
 
 class AdaptiveControls extends StatelessWidget {
-  const AdaptiveControls({
+  AdaptiveControls({
     super.key,
-    this.additionalWidget,
+    this.additionalWidgetBuilder,
   });
-  final Widget? additionalWidget;
-  
+  Widget Function()? additionalWidgetBuilder;
+
   @override
   Widget build(BuildContext context) {
     switch (Theme.of(context).platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
         return MaterialControls(
-          additionalWidget: additionalWidget,
+          additionalWidgetBuilder: additionalWidgetBuilder,
         );
 
       case TargetPlatform.macOS:
@@ -29,7 +29,7 @@ class AdaptiveControls extends StatelessWidget {
         );
       default:
         return MaterialControls(
-          additionalWidget: additionalWidget,
+          additionalWidgetBuilder: additionalWidgetBuilder,
         );
     }
   }

@@ -1,17 +1,17 @@
-import 'package:chewie/src/chewie_player.dart';
-import 'package:chewie/src/helpers/adaptive_controls.dart';
-import 'package:chewie/src/notifiers/index.dart';
+import 'package:chewiebingeplayer/src/chewie_player.dart';
+import 'package:chewiebingeplayer/src/helpers/adaptive_controls.dart';
+import 'package:chewiebingeplayer/src/notifiers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayerWithControls extends StatelessWidget {
-  const PlayerWithControls({
+  PlayerWithControls({
     super.key,
-    this.additionalWidget,
+    this.additionalWidgetBuilder,
   });
 
-  final Widget? additionalWidget;
+  Widget Function()? additionalWidgetBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +30,10 @@ class PlayerWithControls extends StatelessWidget {
       ChewieController chewieController,
     ) {
       return chewieController.showControls
-          ? chewieController.customControls ?? AdaptiveControls(
-            additionalWidget: additionalWidget,
-          )
+          ? chewieController.customControls ??
+              AdaptiveControls(
+                additionalWidgetBuilder: additionalWidgetBuilder,
+              )
           : const SizedBox();
     }
 

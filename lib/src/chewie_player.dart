@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:chewie/src/chewie_progress_colors.dart';
-import 'package:chewie/src/models/option_item.dart';
-import 'package:chewie/src/models/options_translation.dart';
-import 'package:chewie/src/models/subtitle_model.dart';
-import 'package:chewie/src/notifiers/player_notifier.dart';
-import 'package:chewie/src/player_with_controls.dart';
+import 'package:chewiebingeplayer/src/chewie_progress_colors.dart';
+import 'package:chewiebingeplayer/src/models/option_item.dart';
+import 'package:chewiebingeplayer/src/models/options_translation.dart';
+import 'package:chewiebingeplayer/src/models/subtitle_model.dart';
+import 'package:chewiebingeplayer/src/notifiers/player_notifier.dart';
+import 'package:chewiebingeplayer/src/player_with_controls.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,16 +25,15 @@ typedef ChewieRoutePageBuilder = Widget Function(
 /// `video_player` is pretty low level. Chewie wraps it in a friendly skin to
 /// make it easy to use!
 class Chewie extends StatefulWidget {
-  const Chewie({
+  Chewie({
     super.key,
     required this.controller,
-    this.additionalWidget
+    this.additionalWidgetBuilder,
   });
 
   /// The [ChewieController]
   final ChewieController controller;
-
-  final Widget? additionalWidget;
+  Widget Function()? additionalWidgetBuilder;
 
   @override
   ChewieState createState() {
@@ -93,7 +92,7 @@ class ChewieState extends State<Chewie> {
       child: ChangeNotifierProvider<PlayerNotifier>.value(
         value: notifier,
         builder: (context, w) => PlayerWithControls(
-          additionalWidget: widget.additionalWidget,
+          additionalWidgetBuilder: widget.additionalWidgetBuilder,
         ),
       ),
     );
@@ -137,7 +136,9 @@ class ChewieState extends State<Chewie> {
       controller: widget.controller,
       child: ChangeNotifierProvider<PlayerNotifier>.value(
         value: notifier,
-        builder: (context, w) => const PlayerWithControls(),
+        builder: (context, w) => PlayerWithControls(
+          additionalWidgetBuilder: widget.additionalWidgetBuilder
+        ),
       ),
     );
 
