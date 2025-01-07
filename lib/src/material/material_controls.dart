@@ -372,69 +372,92 @@ class _MaterialControlsState extends State<MaterialControls>
         _latestValue.duration.inSeconds > 0;
     final bool showPlayButton =
         widget.showPlayButton && !_dragging && !notifier.hideStuff;
+    return Row(
+      mainAxisAlignment: (!isFinished &&
+              !controller.value.isPlaying &&
+              !chewieController.isLive &&
+              widget.additionalWidgetBuilder != null)
+          ? MainAxisAlignment.spaceBetween
+          : MainAxisAlignment.center,
+      children: [
+        if (!isFinished &&
+            !controller.value.isPlaying &&
+            !chewieController.isLive &&
+            widget.additionalWidgetBuilder != null)
+          widget.additionalWidgetBuilder!(),
+        GestureDetector(
+          onTap: () {
+            if (_latestValue.isPlaying) {
+              if (_displayTapped) {
+                setState(() {
+                  notifier.hideStuff = true;
+                });
+              } else {
+                _cancelAndRestartTimer();
+              }
+            } else {
+              _playPause();
 
-    return GestureDetector(
-      onTap: () {
-        if (_latestValue.isPlaying) {
-          if (_displayTapped) {
-            setState(() {
-              notifier.hideStuff = true;
-            });
-          } else {
-            _cancelAndRestartTimer();
-          }
-        } else {
-          _playPause();
-
-          setState(() {
-            notifier.hideStuff = true;
-          });
-        }
-      },
-      child: Container(
-        alignment: Alignment.center,
-        color: Colors
-            .transparent, // The Gesture Detector doesn't expand to the full size of the container without this; Not sure why!
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            if (!isFinished && controller.value.isPlaying && !chewieController.isLive && widget.additionalWidgetBuilder != null) widget.additionalWidgetBuilder!(),
-            if (!isFinished && !chewieController.isLive)
-              CenterSeekButton(
-                iconData: Icons.replay_10,
-                backgroundColor: Colors.black54,
-                iconColor: Colors.red,
-                show: showPlayButton,
-                fadeDuration: chewieController.materialSeekButtonFadeDuration,
-                iconSize: chewieController.materialSeekButtonSize,
-                onPressed: _seekBackward,
-              ),
-            Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: marginSize,
-              ),
-              child: CenterPlayButton(
-                backgroundColor: Colors.black54,
-                iconColor: Colors.white,
-                isFinished: isFinished,
-                isPlaying: controller.value.isPlaying,
-                show: showPlayButton,
-                onPressed: _playPause,
-              ),
+              setState(() {
+                notifier.hideStuff = true;
+              });
+            }
+          },
+          child: Container(
+            alignment: Alignment.center,
+            color: Colors
+                .transparent, // The Gesture Detector doesn't expand to the full size of the container without this; Not sure why!
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                if (!isFinished && !chewieController.isLive)
+                  CenterSeekButton(
+                    iconData: Icons.replay_10,
+                    backgroundColor: Colors.black54,
+                    iconColor: Colors.white,
+                    show: showPlayButton,
+                    fadeDuration:
+                        chewieController.materialSeekButtonFadeDuration,
+                    iconSize: chewieController.materialSeekButtonSize,
+                    onPressed: _seekBackward,
+                  ),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: marginSize,
+                  ),
+                  child: CenterPlayButton(
+                    backgroundColor: Colors.black54,
+                    iconColor: Colors.white,
+                    isFinished: isFinished,
+                    isPlaying: controller.value.isPlaying,
+                    show: showPlayButton,
+                    onPressed: _playPause,
+                  ),
+                ),
+                if (!isFinished && !chewieController.isLive)
+                  CenterSeekButton(
+                    iconData: Icons.forward_10,
+                    backgroundColor: Colors.black54,
+                    iconColor: Colors.white,
+                    show: showPlayButton,
+                    fadeDuration:
+                        chewieController.materialSeekButtonFadeDuration,
+                    iconSize: chewieController.materialSeekButtonSize,
+                    onPressed: _seekForward,
+                  ),
+              ],
             ),
-            if (!isFinished && !chewieController.isLive)
-              CenterSeekButton(
-                iconData: Icons.forward_10,
-                backgroundColor: Colors.black54,
-                iconColor: Colors.white,
-                show: showPlayButton,
-                fadeDuration: chewieController.materialSeekButtonFadeDuration,
-                iconSize: chewieController.materialSeekButtonSize,
-                onPressed: _seekForward,
-              ),
-          ],
+          ),
         ),
-      ),
+        if (!isFinished &&
+            !controller.value.isPlaying &&
+            !chewieController.isLive &&
+            widget.additionalWidgetBuilder != null)
+          SizedBox(
+            width: 250,
+            height: MediaQuery.sizeOf(context).height,
+          )
+      ],
     );
   }
 

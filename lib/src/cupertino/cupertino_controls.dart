@@ -18,18 +18,18 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class CupertinoControls extends StatefulWidget {
-  const CupertinoControls({
+  CupertinoControls({
     required this.backgroundColor,
     required this.iconColor,
     this.showPlayButton = true,
-    this.additionalWidget,
+    this.additionalWidgetBuilder,
     super.key,
   });
 
   final Color backgroundColor;
   final Color iconColor;
   final bool showPlayButton;
-  final Widget? additionalWidget;
+  Widget Function()? additionalWidgetBuilder;
 
   @override
   State<StatefulWidget> createState() {
@@ -354,29 +354,52 @@ class _CupertinoControlsState extends State<CupertinoControls>
     final bool showPlayButton =
         widget.showPlayButton && !_latestValue.isPlaying && !_dragging;
 
-    return GestureDetector(
-      onTap: _latestValue.isPlaying
-          ? _cancelAndRestartTimer
-          : () {
-              _hideTimer?.cancel();
+    return Row(
+      mainAxisAlignment: (!isFinished &&
+              !controller.value.isPlaying &&
+              !chewieController.isLive &&
+              widget.additionalWidgetBuilder != null)
+          ? MainAxisAlignment.spaceBetween
+          : MainAxisAlignment.center,
+      children: [
+        if (!isFinished &&
+            !controller.value.isPlaying &&
+            !chewieController.isLive &&
+            widget.additionalWidgetBuilder != null)
+          widget.additionalWidgetBuilder!(),
+        GestureDetector(
+          onTap: _latestValue.isPlaying
+              ? _cancelAndRestartTimer
+              : () {
+                  _hideTimer?.cancel();
 
-              setState(() {
-                notifier.hideStuff = false;
-              });
-            },
-      child: Row(
-        children: [
-          if (widget.additionalWidget != null) widget.additionalWidget!,
-          CenterPlayButton(
-            backgroundColor: widget.backgroundColor,
-            iconColor: widget.iconColor,
-            isFinished: isFinished,
-            isPlaying: controller.value.isPlaying,
-            show: showPlayButton,
-            onPressed: _playPause,
+                  setState(() {
+                    notifier.hideStuff = false;
+                  });
+                },
+          child: Row(
+            children: [
+              if (widget.additionalWidget != null) widget.additionalWidget!,
+              CenterPlayButton(
+                backgroundColor: widget.backgroundColor,
+                iconColor: widget.iconColor,
+                isFinished: isFinished,
+                isPlaying: controller.value.isPlaying,
+                show: showPlayButton,
+                onPressed: _playPause,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        if (!isFinished &&
+            !controller.value.isPlaying &&
+            !chewieController.isLive &&
+            widget.additionalWidgetBuilder != null)
+          SizedBox(
+            width: 250,
+            height: MediaQuery.sizeOf(context).height,
+          )
+      ],
     );
   }
 

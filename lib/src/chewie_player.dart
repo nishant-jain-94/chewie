@@ -92,7 +92,6 @@ class ChewieState extends State<Chewie> {
       child: ChangeNotifierProvider<PlayerNotifier>.value(
         value: notifier,
         builder: (context, w) => PlayerWithControls(
-          additionalWidgetBuilder: widget.additionalWidgetBuilder,
         ),
       ),
     );
