@@ -1,6 +1,6 @@
 name: chewiebingeplayer
 description: A video player for Flutter with Cupertino and Material play controls
-version: 1.9.4
+version: 1.9.5
 homepage: https://github.com/nishant-jain-94/chewie
 
 environment:

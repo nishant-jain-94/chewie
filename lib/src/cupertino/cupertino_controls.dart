@@ -379,7 +379,8 @@ class _CupertinoControlsState extends State<CupertinoControls>
                 },
           child: Row(
             children: [
-              if (widget.additionalWidget != null) widget.additionalWidget!,
+              if (widget.additionalWidgetBuilder != null)
+                widget.additionalWidgetBuilder!(),
               CenterPlayButton(
                 backgroundColor: widget.backgroundColor,
                 iconColor: widget.iconColor,
