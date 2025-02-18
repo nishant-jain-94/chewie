@@ -20,7 +20,9 @@ class AdaptiveControls extends StatelessWidget {
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
       case TargetPlatform.linux:
-        return const MaterialDesktopControls();
+        return MaterialDesktopControls(
+          additionalWidgetBuilder: additionalWidgetBuilder,
+        );
 
       case TargetPlatform.iOS:
         return CupertinoControls(

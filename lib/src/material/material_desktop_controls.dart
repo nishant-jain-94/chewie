@@ -16,12 +16,14 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class MaterialDesktopControls extends StatefulWidget {
-  const MaterialDesktopControls({
+  MaterialDesktopControls({
     this.showPlayButton = true,
+    this.additionalWidgetBuilder,
     super.key,
   });
 
   final bool showPlayButton;
+  Widget Function()? additionalWidgetBuilder;
 
   @override
   State<StatefulWidget> createState() {
@@ -332,33 +334,44 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
         _latestValue.duration.inSeconds > 0;
     final bool showPlayButton =
         widget.showPlayButton && !_dragging && !notifier.hideStuff;
+    return Row(
+      mainAxisAlignment: (!isFinished &&
+              !controller.value.isPlaying &&
+              !chewieController.isLive &&
+              widget.additionalWidgetBuilder != null)
+          ? MainAxisAlignment.spaceBetween
+          : MainAxisAlignment.center,
+      children: [
+        if (!_latestValue.isPlaying && widget.additionalWidgetBuilder != null)
+          widget.additionalWidgetBuilder!(),
+        GestureDetector(
+          onTap: () {
+            if (_latestValue.isPlaying) {
+              if (_displayTapped) {
+                setState(() {
+                  notifier.hideStuff = true;
+                });
+              } else {
+                _cancelAndRestartTimer();
+              }
+            } else {
+              _playPause();
 
-    return GestureDetector(
-      onTap: () {
-        if (_latestValue.isPlaying) {
-          if (_displayTapped) {
-            setState(() {
-              notifier.hideStuff = true;
-            });
-          } else {
-            _cancelAndRestartTimer();
-          }
-        } else {
-          _playPause();
-
-          setState(() {
-            notifier.hideStuff = true;
-          });
-        }
-      },
-      child: CenterPlayButton(
-        backgroundColor: Colors.black54,
-        iconColor: Colors.white,
-        isFinished: isFinished,
-        isPlaying: controller.value.isPlaying,
-        show: showPlayButton,
-        onPressed: _playPause,
-      ),
+              setState(() {
+                notifier.hideStuff = true;
+              });
+            }
+          },
+          child: CenterPlayButton(
+            backgroundColor: Colors.black54,
+            iconColor: Colors.white,
+            isFinished: isFinished,
+            isPlaying: controller.value.isPlaying,
+            show: showPlayButton,
+            onPressed: _playPause,
+          ),
+        )
+      ],
     );
   }
 
