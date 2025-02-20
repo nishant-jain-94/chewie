@@ -334,17 +334,14 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
         _latestValue.duration.inSeconds > 0;
     final bool showPlayButton =
         widget.showPlayButton && !_dragging && !notifier.hideStuff;
-    return Row(
-      mainAxisAlignment: (!isFinished &&
-              !controller.value.isPlaying &&
-              !chewieController.isLive &&
-              widget.additionalWidgetBuilder != null)
-          ? MainAxisAlignment.spaceBetween
-          : MainAxisAlignment.center,
-      children: [
-        if (!_latestValue.isPlaying && widget.additionalWidgetBuilder != null)
-          widget.additionalWidgetBuilder!(),
-        GestureDetector(
+    return Stack(children: [
+      if (!_latestValue.isPlaying && widget.additionalWidgetBuilder != null)
+        Positioned(
+          child: widget.additionalWidgetBuilder!(),
+          right: 0,
+        ),
+      Center(
+        child: GestureDetector(
           onTap: () {
             if (_latestValue.isPlaying) {
               if (_displayTapped) {
@@ -370,9 +367,9 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
             show: showPlayButton,
             onPressed: _playPause,
           ),
-        )
-      ],
-    );
+        ),
+      )
+    ]);
   }
 
   Future<void> _onSpeedButtonTap() async {
